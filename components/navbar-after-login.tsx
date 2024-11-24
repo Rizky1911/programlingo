@@ -36,7 +36,7 @@ type NavItem = {
   icon: LucideIcon  // This ensures icon is always a Lucide icon component
 }
 
-export default function NavbarAfterLogin() {
+export default function NavbarAfterLogin({name}:{name?:string}) {
   const [isSticky, setIsSticky] = React.useState(false)
   //const [isServicesOpen, setIsServicesOpen] = React.useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
@@ -88,14 +88,14 @@ export default function NavbarAfterLogin() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarFallback>RR</AvatarFallback>
+            <AvatarFallback>{name ? name.charAt(0) : "U"}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel>
           <div className="flex flex-col">
-            <span>rizky ramadhan</span>
+            <span>{name ? name : "Guest"}</span>
             <Link href="/edit-profile" className="text-sm text-muted-foreground">
               Go to profile
             </Link>

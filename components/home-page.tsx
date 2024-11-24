@@ -14,6 +14,7 @@ import {
   Clock,
   Calendar
 } from "lucide-react"
+import { useSession } from 'next-auth/react'
 
 // Mock data
 const user = {
@@ -46,7 +47,9 @@ const leaderboard = [
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('progress')
+  const userSession = useSession()
 
+  const userData = userSession.data?.user
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* <header className="bg-white dark:bg-gray-800 shadow">
@@ -78,11 +81,11 @@ export default function HomePage() {
               <div className="flex items-center space-x-4">
                 <Avatar className="h-20 w-20">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback>{userData?.name ? userData.name.charAt(0) : "U"}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <h2 className="text-2xl font-bold">{user.name}</h2>
-                  <p className="text-gray-500 dark:text-gray-400">@{user.username}</p>
+                  <h2 className="text-2xl font-bold">{userData?.name ? userData.name : "Guest"}</h2>
+                  <p className="text-gray-500 dark:text-gray-400">{userData?.email ? userData.email : "Guest@mail.com"}</p>
                 </div>
               </div>
               <div className="mt-4">
