@@ -1,0 +1,92 @@
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model user {
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
+  emailVerified DateTime?
+  password      String
+  image         String?
+  phone         String?
+  country_code  Int?
+  address       String?
+  company_id    String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime?
+  user_courses  user_courses[]
+}
+
+model courses{
+  id            String       @id @default(uuid())
+  title         String
+  description   String
+  level         String
+  image         String?
+  course_chapter course_chapter[]
+  user_courses  user_courses[]
+}
+
+model course_chapter{
+  id            String       @id @default(uuid())
+  title         String
+  quiz          Boolean
+  courses_id    String
+  courses       courses      @relation(fields: [courses_id], references: [id])
+  user_course_chapter user_course_chapter[]
+}
+
+model course_chapter_content{
+  id            String       @id @default(uuid())
+  title         String
+  type_id       Int
+  subtitle      String?
+  content       String
+  code          String?
+  course_chapter_content_image course_chapter_content_image[]
+  course_chapter_content_type course_chapter_content_type @relation(fields: [type_id], references: [id])
+}
+
+model course_chapter_content_image{
+  id            String       @id @default(uuid())
+  src           String
+  alt           String
+  width         String
+  height        String
+  choices       String[]
+  correct_answer String
+  course_chapter_content_id String
+  course_chapter_content course_chapter_content @relation(fields: [course_chapter_content_id], references: [id])
+}
+
+model course_chapter_content_type {
+  id            Int         @id @default(autoincrement())
+  name          String
+  description   String
+  course_chapter_content course_chapter_content[]
+}
+
+model user_courses {
+  id            String       @id @default(uuid())
+  user_id       String
+  course_id     String
+  user          user         @relation(fields: [user_id], references: [id])
+  courses       courses      @relation(fields: [course_id], references: [id])
+  user_course_chapter user_course_chapter[]
+}
+
+model user_course_chapter{
+  id             String       @id @default(uuid())
+  user_course_id String
+  course_chapter_id String
+  locked         Boolean      @default(true)
+  user_courses   user_courses @relation(fields: [user_course_id], references: [id])
+  course_chapter course_chapter @relation(fields: [course_chapter_id], references: [id])
+}
+
